@@ -17,13 +17,26 @@
                 light: "#3385ff",
                 sky: "#e0edff",
                 bg: "#f0f4ff",
-                accent: "#111827", // Aksen hitam sporty modern
+                accent: "#111827",
               },
             },
           },
         },
       };
     </script>
+    <style>
+      @keyframes btnProgress {
+        0% {
+          width: 0%;
+        }
+        100% {
+          width: 100%;
+        }
+      }
+      .animate-progress {
+        animation: btnProgress 1.5s infinite linear;
+      }
+    </style>
   </head>
   <body class="bg-brand-bg text-slate-900 min-h-screen flex flex-col font-sans">
     <!-- Toast Notification Melayang Modern -->
@@ -40,10 +53,9 @@
       class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-blue-100"
     >
       <div
-        class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center"
+        class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center"
       >
         <div class="flex items-center gap-3">
-          <!-- Logo diganti menggunakan tag img dengan style wadah yang tetap konsisten -->
           <img
             src="image/LogoBarumba.jpeg"
             alt="Logo Barumba"
@@ -70,7 +82,7 @@
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-5xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
+    <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
       <!-- Statistik Ringkas Hari Ini -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div
@@ -112,7 +124,7 @@
           <button
             onclick="toggleStatusToko()"
             id="btn-toggle-toko"
-            class="px-4 py-2.5 bg-brand-accent hover:bg-black text-white text-xs font-bold rounded-xl transition shadow-md"
+            class="px-4 py-2.5 bg-brand-accent hover:bg-black text-white text-xs font-bold rounded-xl transition shadow-md disabled:opacity-50"
           >
             Ubah Status
           </button>
@@ -140,19 +152,22 @@
           <table class="w-full text-left border-collapse text-xs">
             <thead>
               <tr
-                class="bg-slate-50/80 text-slate-400 uppercase tracking-wider border-b border-slate-100"
+                class="bg-slate-50/80 text-slate-400 uppercase tracking-wider border-b border-slate-100 whitespace-nowrap"
               >
                 <th class="p-3.5 font-bold">Nama Pemesan</th>
                 <th class="p-3.5 font-bold">Waktu / Jam</th>
                 <th class="p-3.5 font-bold">Kategori</th>
                 <th class="p-3.5 font-bold">Durasi</th>
-                <th class="p-3.5 font-bold">Nominal</th>
+                <th class="p-3.5 font-bold">Total Nominal</th>
+                <th class="p-3.5 font-bold">Metode</th>
+                <th class="p-3.5 font-bold">DP</th>
+                <th class="p-3.5 font-bold">Sisa DP</th>
               </tr>
             </thead>
             <tbody id="table-bookings-body">
               <tr>
                 <td
-                  colspan="5"
+                  colspan="8"
                   class="p-6 text-center text-slate-400 font-medium"
                 >
                   Memuat data...
@@ -163,7 +178,7 @@
         </div>
       </div>
 
-      <!-- Kartu Pengaturan Detail (Harga, Jam, & Nomor WA) -->
+      <!-- Kartu Pengaturan Detail (Harga, Minimal DP, Jam, & Nomor WA) -->
       <div
         class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-blue-900/5 border border-white"
       >
@@ -176,20 +191,40 @@
         </div>
 
         <form id="settings-form" class="space-y-4">
-          <div>
-            <label
-              class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider"
-              >Nomor WhatsApp Tujuan Admin (Format 62)</label
-            >
-            <input
-              type="text"
-              id="ADMIN_WA_NUMBER"
-              class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all shadow-sm font-medium"
-              required
-            />
-            <span class="text-[10px] text-slate-400 mt-1 block"
-              >Contoh: 6285331885155 (Tanpa tanda + atau spasi)</span
-            >
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider"
+                >Nomor WhatsApp Tujuan Admin (Format 62)</label
+              >
+              <input
+                type="text"
+                id="ADMIN_WA_NUMBER"
+                class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all shadow-sm font-medium"
+                required
+              />
+              <span class="text-[10px] text-slate-400 mt-1 block"
+                >Contoh: 6282230012582 (Tanpa tanda + atau spasi)</span
+              >
+            </div>
+
+            <div>
+              <label
+                class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider"
+                >Minimal DP (Rp)</label
+              >
+              <input
+                type="text"
+                id="MINIMAL_DP"
+                inputmode="numeric"
+                class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all shadow-sm font-bold text-slate-800"
+                placeholder="0"
+                required
+              />
+              <span class="text-[10px] text-slate-400 mt-1 block"
+                >Isi 0 jika nominal DP bebas tanpa batas minimal</span
+              >
+            </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -199,9 +234,10 @@
                 >Harga Siang (Rp / Jam)</label
               >
               <input
-                type="number"
+                type="text"
                 id="HARGA_SIANG"
-                class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:bg-white transition-all shadow-sm font-medium"
+                inputmode="numeric"
+                class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all shadow-sm font-bold text-slate-800"
                 required
               />
             </div>
@@ -211,9 +247,10 @@
                 >Harga Malam (Rp / Jam)</label
               >
               <input
-                type="number"
+                type="text"
                 id="HARGA_MALAM"
-                class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:bg-white transition-all shadow-sm font-medium"
+                inputmode="numeric"
+                class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all shadow-sm font-bold text-slate-800"
                 required
               />
             </div>
@@ -228,6 +265,8 @@
               <input
                 type="number"
                 id="JAM_BUKA_SIANG"
+                min="0"
+                max="23"
                 class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:bg-white font-medium"
                 required
               />
@@ -240,6 +279,8 @@
               <input
                 type="number"
                 id="JAM_TUTUP_SIANG"
+                min="0"
+                max="24"
                 class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:bg-white font-medium"
                 required
               />
@@ -252,6 +293,8 @@
               <input
                 type="number"
                 id="JAM_BUKA_MALAM"
+                min="0"
+                max="23"
                 class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:bg-white font-medium"
                 required
               />
@@ -264,6 +307,8 @@
               <input
                 type="number"
                 id="JAM_TUTUP_MALAM"
+                min="0"
+                max="24"
                 class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:bg-white font-medium"
                 required
               />
@@ -274,9 +319,15 @@
             <button
               type="submit"
               id="btn-save"
-              class="w-full py-4 bg-gradient-to-r from-brand to-brand-light hover:from-brand-dark hover:to-brand text-white font-black rounded-2xl transition shadow-xl shadow-blue-500/20 text-sm tracking-wide"
+              class="relative w-full overflow-hidden py-4 bg-gradient-to-r from-brand to-brand-light hover:from-brand-dark hover:to-brand text-white font-black rounded-2xl transition-all shadow-xl shadow-blue-500/20 text-sm tracking-wide active:scale-[0.99] disabled:from-slate-300 disabled:to-slate-300 disabled:shadow-none disabled:cursor-not-allowed"
             >
-              Simpan Perubahan Pengaturan
+              <div
+                id="btn-save-progress"
+                class="hidden absolute top-0 left-0 bottom-0 bg-white/25 animate-progress"
+              ></div>
+              <span id="btn-save-text" class="relative z-10">
+                Simpan Perubahan Pengaturan
+              </span>
             </button>
           </div>
         </form>
@@ -290,7 +341,16 @@
 
     <script>
       const APPS_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbxZz_rkAy4pbNUrV73EoSVLA8CdoLwZ_rTcTRCDu8LCpDzG_UW_6oVc5rsMtrL0znHQ/exec"; // Ganti dengan URL deployment Web App Apps Script kamu
+        "https://script.google.com/macros/s/AKfycbwgqi9ZRY7PzFDrP5omDib4ZzC2ro7U3hsOejQD_wSYaJv6Fq1dR5X-bK-cFT8_dM1r/exec";
+
+      // Format ribuan otomatis pada input pengaturan nominal
+      ["MINIMAL_DP", "HARGA_SIANG", "HARGA_MALAM"].forEach((id) => {
+        const el = document.getElementById(id);
+        el.addEventListener("input", (e) => {
+          const val = parseCleanNumber(e.target.value);
+          e.target.value = val > 0 ? val.toLocaleString("id-ID") : "0";
+        });
+      });
 
       window.addEventListener("DOMContentLoaded", loadDashboardData);
 
@@ -303,9 +363,16 @@
             const s = data.settings;
 
             document.getElementById("ADMIN_WA_NUMBER").value =
-              s.adminWaNumber || "6285331885155";
-            document.getElementById("HARGA_SIANG").value = s.hargaSiang;
-            document.getElementById("HARGA_MALAM").value = s.hargaMalam;
+              s.adminWaNumber || "6282230012582";
+            document.getElementById("MINIMAL_DP").value = (
+              Number(s.minimalDp) || 0
+            ).toLocaleString("id-ID");
+            document.getElementById("HARGA_SIANG").value = (
+              Number(s.hargaSiang) || 0
+            ).toLocaleString("id-ID");
+            document.getElementById("HARGA_MALAM").value = (
+              Number(s.hargaMalam) || 0
+            ).toLocaleString("id-ID");
             document.getElementById("JAM_BUKA_SIANG").value = s.jamBukaSiang;
             document.getElementById("JAM_TUTUP_SIANG").value = s.jamTutupSiang;
             document.getElementById("JAM_BUKA_MALAM").value = s.jamBukaMalam;
@@ -327,7 +394,7 @@
       }
 
       function renderTodayBookings(bookings) {
-        const todayISO = new Date().toISOString().split("T")[0];
+        const todayISO = getLocalTodayISO();
         const todayBookings = bookings.filter((b) => b.tanggal === todayISO);
 
         document.getElementById("stat-total-booking").textContent =
@@ -337,32 +404,62 @@
         tbody.innerHTML = "";
 
         if (todayBookings.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 font-medium">Belum ada booking untuk hari ini.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 font-medium">Belum ada booking untuk hari ini.</td></tr>`;
           return;
         }
 
         todayBookings.forEach((b) => {
+          const metode = (b.metodePembayaran || "Tunai").toString();
+          const isDp = metode.toLowerCase() === "dp";
+
+          // Pastikan semua nominal memiliki titik ribuan yang konsisten
+          const totalNum = parseCleanNumber(b.totalHarga);
+          const dpNum = isDp ? parseCleanNumber(b.nominalDp) : 0;
+          const sisaNum = isDp ? parseCleanNumber(b.sisaPembayaran) : totalNum;
+
+          const totalFormatted = formatRupiah(totalNum);
+          const dpFormatted = isDp ? formatRupiah(dpNum) : "Rp 0";
+          const sisaFormatted = formatRupiah(sisaNum);
+
+          const metodeBadge = isDp
+            ? `<span class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 font-bold text-[11px]">DP</span>`
+            : `<span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold text-[11px]">Tunai</span>`;
+
+          // Format durasi aman untuk data lama (angka) maupun data baru (teks "1 Jam 30 Menit")
+          const durasiText =
+            typeof b.durasi === "number"
+              ? `${b.durasi} Jam`
+              : b.durasi || "1 Jam";
+
           let tr = document.createElement("tr");
           tr.className =
-            "border-b border-slate-50 hover:bg-blue-50/30 transition-colors";
+            "border-b border-slate-50 hover:bg-blue-50/30 transition-colors whitespace-nowrap";
           tr.innerHTML = `
-          <td class="p-3.5 font-bold text-slate-800">${b.nama || "-"}</td>
-          <td class="p-3.5 text-slate-600 font-medium">${b.jamMulai} - ${b.jamSelesai}</td>
-          <td class="p-3.5 uppercase font-bold text-brand">${b.kategori || "-"}</td>
-          <td class="p-3.5 text-slate-600 font-medium">${b.durasi || 1} Jam</td>
-          <td class="p-3.5 font-black text-slate-900">${b.totalHarga || "Rp 0"}</td>
-        `;
+            <td class="p-3.5 font-bold text-slate-800">${b.nama || "-"}</td>
+            <td class="p-3.5 text-slate-600 font-medium">${b.jamMulai} - ${b.jamSelesai}</td>
+            <td class="p-3.5 font-bold text-brand">${b.kategori || "-"}</td>
+            <td class="p-3.5 text-slate-600 font-medium">${durasiText}</td>
+            <td class="p-3.5 font-black text-slate-900">${totalFormatted}</td>
+            <td class="p-3.5">${metodeBadge}</td>
+            <td class="p-3.5 font-bold text-amber-700">${dpFormatted}</td>
+            <td class="p-3.5 font-bold text-slate-700">${sisaFormatted}</td>
+          `;
           tbody.appendChild(tr);
         });
       }
 
       async function toggleStatusToko() {
+        const btnToggle = document.getElementById("btn-toggle-toko");
         const statusEl = document.getElementById("stat-status-toko");
         let newStatus = statusEl.textContent.includes("OPEN")
           ? "CLOSED"
           : "OPEN";
-        await saveSettingsToBackend({ STATUS_TOKO: newStatus });
-        loadDashboardData();
+
+        btnToggle.disabled = true;
+        btnToggle.textContent = "Memproses...";
+        await saveSettingsToBackend({ STATUS_TOKO: newStatus }, false);
+        btnToggle.disabled = false;
+        btnToggle.textContent = "Ubah Status";
       }
 
       document
@@ -373,17 +470,42 @@
             ADMIN_WA_NUMBER: document
               .getElementById("ADMIN_WA_NUMBER")
               .value.trim(),
-            HARGA_SIANG: document.getElementById("HARGA_SIANG").value,
-            HARGA_MALAM: document.getElementById("HARGA_MALAM").value,
-            JAM_BUKA_SIANG: document.getElementById("JAM_BUKA_SIANG").value,
-            JAM_TUTUP_SIANG: document.getElementById("JAM_TUTUP_SIANG").value,
-            JAM_BUKA_MALAM: document.getElementById("JAM_BUKA_MALAM").value,
-            JAM_TUTUP_MALAM: document.getElementById("JAM_TUTUP_MALAM").value,
+            MINIMAL_DP: parseCleanNumber(
+              document.getElementById("MINIMAL_DP").value,
+            ),
+            HARGA_SIANG: parseCleanNumber(
+              document.getElementById("HARGA_SIANG").value,
+            ),
+            HARGA_MALAM: parseCleanNumber(
+              document.getElementById("HARGA_MALAM").value,
+            ),
+            JAM_BUKA_SIANG: Number(
+              document.getElementById("JAM_BUKA_SIANG").value,
+            ),
+            JAM_TUTUP_SIANG: Number(
+              document.getElementById("JAM_TUTUP_SIANG").value,
+            ),
+            JAM_BUKA_MALAM: Number(
+              document.getElementById("JAM_BUKA_MALAM").value,
+            ),
+            JAM_TUTUP_MALAM: Number(
+              document.getElementById("JAM_TUTUP_MALAM").value,
+            ),
           };
-          await saveSettingsToBackend(payload);
+          await saveSettingsToBackend(payload, true);
         });
 
-      async function saveSettingsToBackend(settingsObj) {
+      async function saveSettingsToBackend(settingsObj, isFormSubmit = true) {
+        const btnSave = document.getElementById("btn-save");
+        const btnSaveText = document.getElementById("btn-save-text");
+        const btnSaveProgress = document.getElementById("btn-save-progress");
+
+        if (isFormSubmit) {
+          btnSave.disabled = true;
+          btnSaveText.textContent = "Menyimpan Perubahan...";
+          btnSaveProgress.classList.remove("hidden");
+        }
+
         try {
           const res = await fetch(APPS_SCRIPT_URL, {
             method: "POST",
@@ -397,10 +519,37 @@
             result.message || "Pengaturan berhasil disimpan!",
             "success",
           );
-          loadDashboardData();
+          await loadDashboardData();
         } catch (err) {
           showToast("Gagal menyimpan perubahan.", "error");
+        } finally {
+          if (isFormSubmit) {
+            btnSave.disabled = false;
+            btnSaveText.textContent = "Simpan Perubahan Pengaturan";
+            btnSaveProgress.classList.add("hidden");
+          }
         }
+      }
+
+      // Helper: Ambil angka murni dari string/number
+      function parseCleanNumber(val) {
+        if (typeof val === "number") return Math.round(val);
+        const digits = (val || "").toString().replace(/\D/g, "");
+        return digits ? parseInt(digits, 10) : 0;
+      }
+
+      // Helper: Format angka ke Rp X.XXX
+      function formatRupiah(num) {
+        return "Rp " + (Number(num) || 0).toLocaleString("id-ID");
+      }
+
+      // Helper: Tanggal lokal YYYY-MM-DD (menghindari selisih UTC pagi hari)
+      function getLocalTodayISO() {
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
       }
 
       function showToast(message, type = "success") {
